@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScholarshipScholar</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FEFDFB;
+    --surface: #fff;
+    --tint: #F6F4F0;
+    --ink: #1C1C1C;
+    --ink-2: #4A4A4A;
+    --ink-3: #8A8A8A;
+    --line: #E4E0DA;
+    --green: #2D6A4F;
+    --green-bg: #E9F5EE;
+    --red: #B83A2E;
+    --serif: 'Source Serif 4', Georgia, serif;
+    --sans: 'Geist', system-ui, -apple-system, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.5; }
+
+  nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 28px; border-bottom: 1px solid var(--line);
+  }
+  .brand { font-family: var(--serif); font-size: 19px; font-weight: 600; color: var(--ink); text-decoration: none; }
+  .brand span { color: var(--green); }
+  .nav-right { font-size: 13px; color: var(--ink-3); }
+
+  .top { max-width: 560px; margin: 0 auto; padding: 56px 24px 32px; text-align: left; }
+  .top h1 { font-family: var(--serif); font-size: 28px; font-weight: 600; line-height: 1.3; margin-bottom: 10px; letter-spacing: -0.3px; }
+  .top p { font-size: 15px; color: var(--ink-2); line-height: 1.6; max-width: 480px; }
+
+  .wrap { max-width: 560px; margin: 0 auto 64px; padding: 0 24px; }
+  .group { margin-bottom: 36px; }
+  .group-head { font-family: var(--serif); font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  .group-sub { font-size: 13px; color: var(--ink-3); margin-bottom: 18px; }
+  .sep { width: 100%; height: 1px; background: var(--line); margin-bottom: 36px; }
+
+  .f { margin-bottom: 16px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 5px; }
+  label .opt { font-weight: 400; color: var(--ink-3); }
+
+  input, select, textarea {
+    width: 100%; padding: 10px 12px; font-size: 14px; font-family: var(--sans);
+    color: var(--ink); background: var(--surface); border: 1px solid var(--line);
+    border-radius: 6px; outline: none; transition: border-color 0.12s;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--ink-2); }
+  input::placeholder, textarea::placeholder { color: #C0BFBA; }
+  select {
+    cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%238A8A8A' viewBox='0 0 16 16'%3E%3Cpath d='M8 12L2 6h12l-6 6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center;
+  }
+  textarea { resize: vertical; min-height: 64px; line-height: 1.5; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 3px; }
+  .t {
+    padding: 6px 14px; font-size: 13px; font-family: var(--sans); font-weight: 500;
+    border: 1px solid var(--line); border-radius: 100px; background: var(--surface);
+    color: var(--ink-2); cursor: pointer; transition: all 0.12s; user-select: none;
+  }
+  .t:hover { border-color: var(--ink-3); }
+  .t.on { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+  .t.custom { position: relative; padding-right: 28px; }
+  .t.custom .x {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    font-size: 14px; line-height: 1; color: var(--ink-3); cursor: pointer;
+    width: 14px; height: 14px; display: flex; align-items: center; justify-content: center;
+  }
+  .t.custom .x:hover { color: var(--red); }
+  .t-add {
+    padding: 6px 14px; font-size: 13px; font-family: var(--sans); font-weight: 500;
+    border: 1px dashed var(--line); border-radius: 100px; background: transparent;
+    color: var(--ink-3); cursor: pointer; transition: all 0.12s; user-select: none;
+  }
+  .t-add:hover { border-color: var(--ink-3); color: var(--ink-2); }
+  .tag-input-wrap {
+    display: none; align-items: center; gap: 6px;
+  }
+  .tag-input-wrap.open { display: inline-flex; }
+  .tag-input-wrap input {
+    width: 140px; padding: 5px 10px; font-size: 13px; border-radius: 100px;
+  }
+  .tag-input-wrap button {
+    padding: 5px 12px; font-size: 12px; font-family: var(--sans); font-weight: 600;
+    background: var(--green); color: #fff; border: none; border-radius: 100px;
+    cursor: pointer;
+  }
+  .tag-input-wrap button:hover { opacity: 0.85; }
+  .tag-input-wrap .cancel-add {
+    background: none; color: var(--ink-3); border: 1px solid var(--line);
+  }
+
+  .actions { display: flex; gap: 10px; align-items: center; margin-top: 28px; }
+  .btn-go {
+    padding: 12px 36px; font-size: 14px; font-weight: 600; font-family: var(--sans);
+    background: var(--ink); color: #fff; border: none; border-radius: 6px;
+    cursor: pointer; transition: opacity 0.12s;
+  }
+  .btn-go:hover { opacity: 0.85; }
+  .btn-go:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-x {
+    padding: 12px 20px; font-size: 13px; font-weight: 500; font-family: var(--sans);
+    background: none; color: var(--ink-3); border: 1px solid var(--line);
+    border-radius: 6px; cursor: pointer;
+  }
+  .btn-x:hover { color: var(--ink-2); border-color: var(--ink-3); }
+  .err-msg { font-size: 13px; color: var(--red); margin-top: 10px; min-height: 18px; }
+
+  .done { display: none; max-width: 440px; margin: 0 auto; padding: 100px 24px; text-align: center; }
+  .done.show { display: block; }
+  .done-icon {
+    width: 48px; height: 48px; border-radius: 50%; background: var(--green-bg);
+    display: inline-flex; align-items: center; justify-content: center; margin-bottom: 18px;
+  }
+  .done-icon svg { width: 24px; height: 24px; color: var(--green); }
+  .done h2 { font-family: var(--serif); font-size: 22px; font-weight: 600; margin-bottom: 10px; }
+  .done p { font-size: 15px; color: var(--ink-2); line-height: 1.6; margin-bottom: 6px; }
+  .done .ref {
+    display: inline-block; margin-top: 14px; padding: 6px 16px;
+    font-size: 13px; font-family: monospace; background: var(--tint);
+    border-radius: 4px; color: var(--ink-2); letter-spacing: 0.5px;
+  }
+
+  footer { text-align: center; padding: 28px; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-3); }
+
+  @media (max-width: 520px) {
+    .row2, .row3 { grid-template-columns: 1fr; }
+    .top { padding: 36px 20px 24px; }
+    .top h1 { font-size: 24px; }
+    .wrap { padding: 0 20px; }
+    nav { padding: 14px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="brand">Scholarship<span>Scholar</span></a>
+  <span class="nav-right">Scholarship Matching Service</span>
+</nav>
+
+<div class="top" id="topSection">
+  <h1>Tell us about yourself</h1>
+  <p>We use this to match you with scholarships you're eligible for. Fill out what you can — the more detail, the better your results.</p>
+</div>
+
+<div class="wrap" id="formWrap">
+  <div class="sep"></div>
+
+  <div class="group">
+    <div class="group-head">Basics</div>
+    <div class="group-sub">Who you are and where you go to school.</div>
+    <div class="row2">
+      <div class="f"><label>First name</label><input type="text" id="fname" placeholder="Jane"></div>
+      <div class="f"><label>Last name</label><input type="text" id="lname" placeholder="Doe"></div>
+    </div>
+    <div class="f"><label>Email</label><input type="email" id="email" placeholder="you@email.com"></div>
+    <div class="row3">
+      <div class="f"><label>Grade</label>
+        <select id="grade"><option value="">—</option><option>9th</option><option>10th</option><option>11th</option><option>12th</option><option>College Freshman</option><option>College Sophomore</option></select>
+      </div>
+      <div class="f"><label>Grad year</label><input type="text" id="gradYear" placeholder="2027"></div>
+      <div class="f"><label>Citizenship</label>
+        <select id="citizenship"><option value="">—</option><option>US Citizen</option><option>Permanent Resident</option><option>DACA</option><option>International</option><option>Other</option></select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="f"><label>School</label><input type="text" id="school" placeholder="Lincoln High School"></div>
+      <div class="f"><label>State</label><input type="text" id="state" placeholder="Virginia"></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-head">Academics</div>
+    <div class="group-sub">Helps filter by GPA and test score requirements.</div>
+    <div class="row3">
+      <div class="f"><label>GPA (unw.) <span class="opt">optional</span></label><input type="text" id="gpaUW" placeholder="3.8"></div>
+      <div class="f"><label>GPA (w.) <span class="opt">optional</span></label><input type="text" id="gpaW" placeholder="4.2"></div>
+      <div class="f"><label>SAT / ACT <span class="opt">optional</span></label><input type="text" id="testScore" placeholder="1400"></div>
+    </div>
+    <div class="f"><label>AP / Honors courses <span class="opt">optional</span></label><input type="text" id="courses" placeholder="AP Calc, AP Lang, Honors Chem"></div>
+    <div class="f"><label>Awards <span class="opt">optional</span></label><textarea id="awards" placeholder="Honor Roll, Science Fair placement, National Merit..."></textarea></div>
+  </div>
+
+  <div class="group">
+    <div class="group-head">Interests & activities</div>
+    <div class="group-sub">Select all that apply. More tags = more matches.</div>
+    <div class="f">
+      <div class="tags" id="interestTags">
+        <span class="t" onclick="tog(this)">Cybersecurity</span>
+        <span class="t" onclick="tog(this)">Computer Science</span>
+        <span class="t" onclick="tog(this)">Engineering</span>
+        <span class="t" onclick="tog(this)">Math</span>
+        <span class="t" onclick="tog(this)">Pre-Med / Bio</span>
+        <span class="t" onclick="tog(this)">Nursing / Health</span>
+        <span class="t" onclick="tog(this)">Business</span>
+        <span class="t" onclick="tog(this)">Arts / Design</span>
+        <span class="t" onclick="tog(this)">Education</span>
+        <span class="t" onclick="tog(this)">Environmental Sci</span>
+        <span class="t" onclick="tog(this)">Law / Poli Sci</span>
+        <span class="t" onclick="tog(this)">Writing</span>
+        <span class="t" onclick="tog(this)">Music / Performing Arts</span>
+        <span class="t" onclick="tog(this)">Trades / CTE</span>
+        <span class="t" onclick="tog(this)">Agriculture</span>
+        <span class="t" onclick="tog(this)">Social Work</span>
+        <span class="t-add" onclick="showAddTag(this,'interestTags')">+ Add your own</span>
+        <span class="tag-input-wrap" id="interestTags-input">
+          <input type="text" placeholder="e.g. Robotics" onkeydown="if(event.key==='Enter')addCustomTag('interestTags')">
+          <button onclick="addCustomTag('interestTags')">Add</button>
+          <button class="cancel-add" onclick="hideAddTag('interestTags')">Cancel</button>
+        </span>
+      </div>
+    </div>
+    <div class="f"><label>Clubs & extracurriculars</label><textarea id="activities" placeholder="Robotics, FBLA, debate, varsity track, tutoring..."></textarea></div>
+    <div class="f"><label>Technical skills <span class="opt">optional</span></label><input type="text" id="skills" placeholder="Python, Photoshop, CAD, welding..."></div>
+    <div class="f"><label>Work / volunteer <span class="opt">optional</span></label><textarea id="experience" placeholder="Part-time jobs, internships, community service..."></textarea></div>
+  </div>
+
+  <div class="group">
+    <div class="group-head">What to look for</div>
+    <div class="group-sub">Helps us narrow down results to what's relevant.</div>
+    <div class="f">
+      <div class="tags" id="prefTags">
+        <span class="t on" onclick="tog(this)">Merit-based</span>
+        <span class="t on" onclick="tog(this)">Need-based</span>
+        <span class="t" onclick="tog(this)">No-essay</span>
+        <span class="t" onclick="tog(this)">Essay OK</span>
+        <span class="t" onclick="tog(this)">STEM</span>
+        <span class="t" onclick="tog(this)">State / local</span>
+        <span class="t" onclick="tog(this)">National</span>
+        <span class="t" onclick="tog(this)">First-gen</span>
+        <span class="t" onclick="tog(this)">Minority</span>
+        <span class="t" onclick="tog(this)">Community service</span>
+        <span class="t" onclick="tog(this)">Athletic</span>
+        <span class="t" onclick="tog(this)">Faith-based</span>
+        <span class="t-add" onclick="showAddTag(this,'prefTags')">+ Add your own</span>
+        <span class="tag-input-wrap" id="prefTags-input">
+          <input type="text" placeholder="e.g. Military" onkeydown="if(event.key==='Enter')addCustomTag('prefTags')">
+          <button onclick="addCustomTag('prefTags')">Add</button>
+          <button class="cancel-add" onclick="hideAddTag('prefTags')">Cancel</button>
+        </span>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="f"><label>Min. award</label>
+        <select id="minAmount"><option value="$250">$250+</option><option value="$500" selected>$500+</option><option value="$1,000">$1,000+</option><option value="$2,500">$2,500+</option><option value="$5,000">$5,000+</option></select>
+      </div>
+      <div class="f"><label>Deadline window</label>
+        <select id="deadline"><option value="1 month">1+ month out</option><option value="2 months" selected>2+ months out</option><option value="3 months">3+ months out</option><option value="any">Any</option></select>
+      </div>
+    </div>
+    <div class="f"><label>Essay topics you could write about <span class="opt">optional</span></label><textarea id="essayThemes" placeholder="Overcoming a challenge, community impact, career goals..."></textarea></div>
+    <div class="f"><label>Anything else <span class="opt">optional</span></label><textarea id="notes" placeholder="Target colleges, financial situation, demographics..."></textarea></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-go" id="submitBtn" onclick="submitForm()">Submit</button>
+    <button class="btn-x" onclick="clearForm()">Clear</button>
+  </div>
+  <div class="err-msg" id="errMsg"></div>
+</div>
+
+<div class="done" id="doneScreen">
+  <div class="done-icon">
+    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+  </div>
+  <h2>Submitted</h2>
+  <p>We've got your info. Expect a personalized scholarship report within 48 hours at the email you provided.</p>
+  <span class="ref" id="refCode"></span>
+</div>
+
+<footer>&copy; 2026 ScholarshipScholar</footer>
+
+<script>
+function tog(el){el.classList.toggle('on')}
+function val(id){return document.getElementById(id).value.trim()}
+function tags(id){return[...document.getElementById(id).querySelectorAll('.t.on')].map(t=>t.textContent.replace('×','').trim())}
+function ref(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let r='SS-';for(let i=0;i<6;i++)r+=c[Math.floor(Math.random()*c.length)];return r}
+
+function showAddTag(btn, groupId) {
+  btn.style.display='none';
+  const wrap=document.getElementById(groupId+'-input');
+  wrap.classList.add('open');
+  wrap.querySelector('input').focus();
+}
+
+function hideAddTag(groupId) {
+  const wrap=document.getElementById(groupId+'-input');
+  wrap.classList.remove('open');
+  wrap.querySelector('input').value='';
+  const addBtn=document.getElementById(groupId).querySelector('.t-add');
+  addBtn.style.display='';
+}
+
+function addCustomTag(groupId) {
+  const wrap=document.getElementById(groupId+'-input');
+  const input=wrap.querySelector('input');
+  const text=input.value.trim();
+  if(!text) return;
+
+  const group=document.getElementById(groupId);
+  const tag=document.createElement('span');
+  tag.className='t on custom';
+  tag.innerHTML=text+'<span class="x" onclick="removeTag(this)">×</span>';
+  tag.addEventListener('click',function(e){
+    if(!e.target.classList.contains('x')) tog(this);
+  });
+
+  const addBtn=group.querySelector('.t-add');
+  group.insertBefore(tag, addBtn);
+
+  input.value='';
+  input.focus();
+}
+
+function removeTag(x) {
+  x.parentElement.remove();
+}
+
+function buildSOUL(){
+  const name=[val('fname'),val('lname')].filter(Boolean).join(' ')||'Client';
+  const interests=tags('interestTags'),prefs=tags('prefTags');
+  const state=val('state'),grade=val('grade');
+  let s=`# Scholarship Profile — ${name}\n\n## Personal Info\n`;
+  s+=`- Name: ${name}\n`;
+  if(val('email'))s+=`- Email: ${val('email')}\n`;
+  s+=`- Grade: ${grade||'N/A'}\n- School: ${val('school')||'N/A'}, ${state||'N/A'}\n`;
+  s+=`- Graduation: ${val('gradYear')||'N/A'}\n- Citizenship: ${val('citizenship')||'N/A'}\n\n`;
+  s+=`## Academics\n`;
+  if(val('gpaUW'))s+=`- GPA (UW): ${val('gpaUW')}\n`;
+  if(val('gpaW'))s+=`- GPA (W): ${val('gpaW')}\n`;
+  if(val('testScore'))s+=`- Test: ${val('testScore')}\n`;
+  if(val('courses'))s+=`- Courses: ${val('courses')}\n`;
+  if(val('awards'))s+=`- Awards: ${val('awards')}\n`;
+  s+=`\n## Interests\n`;
+  if(interests.length)s+=`- Fields: ${interests.join(', ')}\n`;
+  if(val('activities'))s+=`- Activities: ${val('activities')}\n`;
+  if(val('skills'))s+=`- Skills: ${val('skills')}\n`;
+  if(val('experience'))s+=`- Experience: ${val('experience')}\n`;
+  s+=`\n## Preferences\n`;
+  if(prefs.length)s+=`- Types: ${prefs.join(', ')}\n`;
+  s+=`- Min: ${val('minAmount')}\n- Deadline: ${val('deadline')}\n`;
+  if(val('essayThemes'))s+=`\n## Essay Themes\n${val('essayThemes')}\n`;
+  if(val('notes'))s+=`\n## Notes\n${val('notes')}\n`;
+  s+=`\n## Instructions\n1. Match against this profile\n2. Prioritize: ${interests.slice(0,3).join(', ')||'STEM'}, ${state||'state'}-specific\n`;
+  s+=`3. Eligibility: grade=${grade}, citizenship=${val('citizenship')}, GPA=${val('gpaUW')||'N/A'}\n`;
+  s+=`4. Format: Name | Amount | Deadline | URL | Match Reason\n5. Flag HIGH PRIORITY if amount>$2000 or strong match\n`;
+  return s;
+}
+
+async function submitForm(){
+  if(!val('fname')||!val('email')||!val('grade')){
+    document.getElementById('errMsg').textContent='Name, email, and grade are required.';return;
+  }
+  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Sending...';
+  const r=ref(),soul=buildSOUL();
+  const payload={
+    ref:r,timestamp:new Date().toISOString(),
+    firstName:val('fname'),lastName:val('lname'),email:val('email'),
+    grade:val('grade'),gradYear:val('gradYear'),citizenship:val('citizenship'),
+    school:val('school'),state:val('state'),
+    gpaUW:val('gpaUW'),gpaW:val('gpaW'),testScore:val('testScore'),
+    courses:val('courses'),awards:val('awards'),
+    interests:tags('interestTags').join(', '),activities:val('activities'),
+    skills:val('skills'),experience:val('experience'),
+    prefTypes:tags('prefTags').join(', '),minAmount:val('minAmount'),
+    deadline:val('deadline'),essayThemes:val('essayThemes'),notes:val('notes'),
+    soulMd:soul
+  };
+
+  // ============================================================
+  // GOOGLE SHEETS SETUP
+  // ============================================================
+  // 1. Go to sheets.google.com — make a new sheet
+  // 2. Extensions → Apps Script
+  // 3. Replace the code with:
+  //
+  // function doPost(e) {
+  // var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  // var data = JSON.parse(e.postData.contents);
+  // if (sheet.getLastRow() === 0) sheet.appendRow(Object.keys(data));
+  // sheet.appendRow(Object.values(data));
+  // return ContentService.createTextOutput(
+  // JSON.stringify({status:"ok"})
+  // ).setMimeType(ContentService.MimeType.JSON);
+  // }
+  //
+  // 4. Deploy → New deployment → Web app
+  // Execute as: Me | Access: Anyone
+  // 5. Copy the URL and pas
