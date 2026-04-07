@@ -397,4 +397,55 @@ async function submitForm(){
   //
   // 4. Deploy → New deployment → Web app
   // Execute as: Me | Access: Anyone
-  // 5. Copy the URL and pas
+  const scriptUrl='https://script.google.com/macros/s/AKfycbxEADcvikRamZmJn_mjYm4fuJlAz5ZzV4FtjWtmTpsoT7Aihj2_3ib2c11XUgu0arxH2Q/exec';
+
+  try{
+    const res=await fetch(scriptUrl,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(payload)
+    });
+
+    if(!res.ok) throw new Error(`Request failed with status ${res.status}`);
+
+    let result={};
+    try{
+      result=await res.json();
+    }catch(_err){
+      result={status:'ok'};
+    }
+
+    if(result.status && result.status !== 'ok'){
+      throw new Error(result.message || 'Submission failed.');
+    }
+
+    document.getElementById('formWrap').style.display='none';
+    document.getElementById('topSection').style.display='none';
+    document.getElementById('doneScreen').classList.add('show');
+    document.getElementById('refCode').textContent=r;
+    document.getElementById('errMsg').textContent='';
+  }catch(err){
+    document.getElementById('errMsg').textContent='Could not submit right now. Please try again.';
+    console.error(err);
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Submit';
+  }
+}
+
+function clearForm(){
+  document.querySelectorAll('input, textarea').forEach(el=>el.value='');
+  document.querySelectorAll('select').forEach(el=>el.selectedIndex=0);
+  document.querySelectorAll('#interestTags .t.on, #prefTags .t.on').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('#interestTags .t.custom, #prefTags .t.custom').forEach(el=>el.remove());
+  document.querySelectorAll('.tag-input-wrap').forEach(wrap=>{
+    wrap.classList.remove('open');
+    const input=wrap.querySelector('input');
+    if(input) input.value='';
+  });
+  document.querySelectorAll('.t-add').forEach(btn=>btn.style.display='');
+  document.getElementById('errMsg').textContent='';
+}
+</script>
+</body>
+</html>
